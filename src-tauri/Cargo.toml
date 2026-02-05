@@ -1,0 +1,23 @@
+[package]
+name = "omni-ai-bench"
+version = "1.0.0"
+description = "Comprehensive AI and hardware benchmarking suite"
+authors = ["OmniAIBench Contributors"]
+license = "MIT"
+repository = ""
+edition = "2021"
+
+[build-dependencies]
+tauri-build = { version = "2.0", features = [] }
+
+[target.'cfg(windows)'.build-dependencies]
+embed-resource = "2.4"
+
+[dependencies]
+tauri = { version = "2.0", features = ["protocol-asset"] }
+tauri-plugin-shell = "2.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[features]
+custom-protocol = ["tauri/custom-protocol"]

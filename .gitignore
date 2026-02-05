@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+dist/
+target/
+
+# Tauri
+/src-tauri/target/
+/src-tauri/Cargo.lock
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# Model cache
+backend/cache/
+
+# Build outputs
+*.exe
+*.msi
+*.dmg
+*.deb
