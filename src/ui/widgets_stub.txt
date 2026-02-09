@@ -1,0 +1,41 @@
+// Sensor Panel Widget
+#include "sensor_panel_widget.h"
+#include <QWidget>
+class SensorPanelWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit SensorPanelWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+    void updateData() {}
+};
+
+// CPU Benchmark Widget  
+#include "cpu_benchmark_widget.h"
+class CPUBenchmarkWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit CPUBenchmarkWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+};
+
+// GPU Benchmark Widget
+#include "gpu_benchmark_widget.h"
+class GPUBenchmarkWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit GPUBenchmarkWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+};
+
+// NPU Benchmark Widget
+#include "npu_benchmark_widget.h"
+class NPUBenchmarkWidget : public QWidget {
+    Q_OBJECT
+public:
+    explicit NPUBenchmarkWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+};
+
+// Leaderboard Widget
+#include "leaderboard_widget.h"
+class LeaderboardWidget : public QWidget {
+    Q_OBJECT  
+public:
+    explicit LeaderboardWidget(QWidget *parent = nullptr) : QWidget(parent) {}
+};

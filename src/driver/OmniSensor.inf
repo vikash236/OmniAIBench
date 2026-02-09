@@ -1,0 +1,51 @@
+; OmniSensor.inf
+; Windows Driver INF file for OmniSensor kernel driver
+; License: MIT
+
+[Version]
+Signature   = "$WINDOWS NT$"
+Class       = System
+ClassGuid   = {4D36E97D-E325-11CE-BFC1-08002BE10318}
+Provider    = %ManufacturerName%
+CatalogFile = OmniSensor.cat
+DriverVer   = 02/09/2026,1.0.0.0
+PnpLockdown = 1
+
+[DestinationDirs]
+DefaultDestDir = 12  ; %WinDir%\System32\Drivers
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+OmniSensor.sys = 1,,
+
+[Manufacturer]
+%ManufacturerName% = Standard, NTamd64
+
+[Standard.NTamd64]
+%OmniSensor.DeviceDesc% = OmniSensor_Device, Root\OmniSensor
+
+[OmniSensor_Device.NT]
+CopyFiles = OmniSensor.NT.Copy
+
+[OmniSensor.NT.Copy]
+OmniSensor.sys
+
+[OmniSensor_Device.NT.Services]
+AddService = OmniSensor, 0x00000002, OmniSensor_Service_Inst
+
+[OmniSensor_Service_Inst]
+DisplayName    = %ServiceName%
+ServiceType    = 1  ; SERVICE_KERNEL_DRIVER
+StartType      = 3  ; SERVICE_DEMAND_START
+ErrorControl   = 1  ; SERVICE_ERROR_NORMAL
+ServiceBinary  = %12%\OmniSensor.sys
+Description    = %ServiceDescription%
+
+[Strings]
+ManufacturerName    = "OmniAIBench"
+DiskName            = "OmniSensor Installation Disk"
+OmniSensor.DeviceDesc = "OmniSensor Hardware Monitor Driver"
+ServiceName         = "OmniSensor"
+ServiceDescription  = "Kernel driver for direct hardware sensor access (MSR, SMBus, EC)"

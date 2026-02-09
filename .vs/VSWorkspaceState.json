@@ -1,12 +1,13 @@
 {
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
+    ]
+  },
   "ExpandedNodes": [
-    "",
-    "\\OmniHardwareMonitor\\bin",
-    "\\OmniHardwareMonitor\\bin\\Release",
-    "\\OmniHardwareMonitor\\bin\\Release\\net8.0",
-    "\\OmniHardwareMonitor\\bin\\Release\\net8.0\\win-x64",
-    "\\OmniHardwareMonitor\\bin\\Release\\net8.0\\win-x64\\publish"
+    ""
   ],
-  "SelectedNode": "\\OmniHardwareMonitor",
+  "SelectedNode": "\\vite.config.ts",
   "PreviewInSolutionExplorer": false
 }

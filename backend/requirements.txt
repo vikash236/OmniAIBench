@@ -1,4 +1,0 @@
-pythonnet
-py-cpuinfo
-psutil
-pynvml

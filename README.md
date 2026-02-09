@@ -1,170 +1,105 @@
-# OmniAIBench 🚀
+# OmniAIBench - Professional Hardware & AI Benchmark Suite
 
-A comprehensive hardware benchmarking and monitoring application with professional VS Code-inspired UI.
+A high-performance, native C++ benchmarking application for Windows using Qt 6, OpenVINO, and DirectX 12/Vulkan.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
-![Platform](https://img.shields.io/badge/platform-Windows-blue)
-![License](https://img.shields.io/badge/license-MIT-green)
+## 🆓 100% Free & Open Source
 
-## ✨ Features
+All technologies used are completely **free and open source** (MIT, Apache 2.0, LGPL licenses).
+
+## Features
 
 ### 📊 Real-Time Hardware Monitoring
-- **CPU Monitoring**: Core temperatures, frequencies, loads (per-thread)
-- **GPU Monitoring**: Temperature, utilization, VRAM, power draw, fan speeds
-- **RAM Monitoring**: Usage, available memory
-- **NPU Detection**: AMD Ryzen AI support
-- **Comprehensive Sensors**: Voltages, power consumption, fan speeds
+- **CPU**: Core temperatures, frequencies, per-thread loads, power consumption
+- **GPU**: Temperature, utilization, VRAM, power draw, fan speeds
+- **RAM**: Usage, available memory, frequency
+- **NPU**: AMD Ryzen AI detection and monitoring
+- **Comprehensive Sensors**: Voltages, fan speeds, NVMe temperatures
 
 ### 🏆 Benchmark Suite
-- **CPU Benchmark**: Single-core and multi-core performance tests
-- **GPU Benchmark**: Graphics + compute tests with live FPS tracking
-- **NPU Benchmark**: AI inference performance testing
-- **Score Tracking**: Local leaderboard with export to JSON
+- **CPU Benchmark**: Single-core + multi-core performance tests
+- **GPU Benchmark**: Graphics + compute with live FPS tracking
+- **NPU Benchmark**: AI inference testing (ResNet50, MobileNet, BERT)
+- **Score Tracking**: Local leaderboard with JSON export
 
 ### 🎨 Professional UI
-- Clean VS Code Dark+ theme
-- Flat minimal design
+- VS Code Dark+ theme
 - Color-coded components (Blue=CPU, Amber=GPU, Yellow=NPU, Green=RAM)
-- Responsive layout
-- Small, clean fonts (13px base)
+- Native Qt 6 interface (NO web technologies)
 
-## 📦 Installation
+## Technology Stack
+
+- **C++20** with MSVC 2022
+- **Qt 6.6** (Native Windows UI)
+- **ONNX Runtime** + **OpenVINO** (AI inference)
+- **DirectX 12** + **Vulkan** (GPU benchmarks)
+- **Custom kernel driver** (HWiNFO64-style sensor monitoring)
+- **Python 3.11** (Model management)
+
+## Build Instructions
 
 ### Prerequisites
-- Windows 10/11 (x64)
-- .NET 8.0 Runtime (bundled with installer)
-- WebView2 Runtime (auto-installed)
 
-### Install Steps
+1. **Visual Studio 2022** (Community Edition - FREE)
+   - Install with "Desktop development with C++" workload
+   - Include Windows 11 SDK
 
-1. **Download installer** from Releases:
-   - `OmniAIBench_1.0.0_x64_en-US.msi` (recommended)
-   - `OmniAIBench_1.0.0_x64-setup.exe` (NSIS)
-
-2. **Run installer** and follow wizard
-
-3. **Launch with admin privileges**:
-   ```
-   Navigate to install directory
-   Run: OmniAIBench-Launcher.bat
-   Click "Yes" on UAC prompt
+2. **vcpkg** (Package Manager)
+   ```powershell
+   git clone https://github.com/Microsoft/vcpkg.git c:\vcpkg
+   cd c:\vcpkg
+   .\bootstrap-vcpkg.bat
    ```
 
-## 🔧 Building from Source
-
-### Requirements
-- Node.js 18+
-- Rust 1.70+
-- .NET 8.0 SDK
-- Python 3.8+ (optional, for backend monitoring)
+3. **Dependencies** (via vcpkg)
+   ```powershell
+   cd c:\vcpkg
+   .\vcpkg install qt6-base:x64-windows qt6-charts:x64-windows
+   .\vcpkg install onnxruntime-gpu:x64-windows 
+   .\vcpkg install openvino:x64-windows
+   .\vcpkg install sqlite3:x64-windows
+   .\vcpkg install vulkan:x64-windows
+   .\vcpkg install nlohmann-json:x64-windows
+   ```
 
 ### Build Steps
 
-```bash
-# Clone repository
-git clone https://github.com/vikash236/OmniAIBench.git
-cd OmniAIBench
+```powershell
+# Navigate to project
+cd c:\Projects\OmniAIBench
 
-# Install dependencies
-npm install
+# Configure CMake
+cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=c:/vcpkg/scripts/buildsystems/vcpkg.cmake
 
-# Build C# sidecar
-cd OmniHardwareMonitor
-dotnet publish -c Release -r win-x64 --self-contained
-cd ..
+# Build
+cmake --build build --config Release
 
-# Development mode
-npm run tauri dev
-
-# Production build
-npm run tauri build
+# Output: build/Release/OmniAIBench.exe
 ```
 
-**Output**: Installers in `src-tauri/target/release/bundle/`
+## Driver Signing (for sensor monitoring)
 
-## ⚡ Auto-Admin Elevation
+See [`driver_signing_guide.md`](docs/driver_signing_guide.md) for detailed instructions on creating self-signed test certificates.
 
-OmniAIBench requires administrator privileges for full hardware sensor access.
+## First Run
 
-**Solution**: Use included `OmniAIBench-Launcher.bat`
+On first run, the application will download AI models (~500 MB) from Hugging Face automatically.
 
-### How it works:
-1. Launcher checks if running as admin
-2. Shows UAC prompt if needed
-3. Launches app with admin rights
-4. Full sensor access enabled!
+## License
 
-### Create Desktop Shortcut:
-1. Open install directory
-2. Right-click `OmniAIBench-Launcher.bat`
-3. Send to → Desktop (create shortcut)
+MIT License - See [LICENSE.md](LICENSE.md)
 
-## 🎯 Usage
+## Contributing
 
-### Dashboard
-- View real-time hardware stats
-- CPU/GPU/RAM overview
-- Auto-refresh every 5 seconds
+Contributions welcome! This is a 100% open-source project.
 
-### Sensor Panel
-- Click "Sensors" button in header
-- Categorized sensor view (temperatures, utilization, frequencies, power, fans, memory)
+## Architecture
 
-### Benchmarks
-- Navigate to CPU/GPU/NPU Benchmark pages
-- Click "Start Benchmark"
-- View progress and results
-- Scores automatically saved to leaderboard
-
-### Leaderboard
-- View all test results
-- Filter by test type
-- Export to JSON
-
-## 🛠️ Tech Stack
-
-**Frontend:** React 18, TypeScript, Vite, Tailwind CSS
-**Backend:** Tauri v2 (Rust), C# LibreHardwareMonitor, Python
-**Monitoring:** LibreHardwareMonitor, psutil, pynvml, Windows WMI
-
-## 📁 Project Structure
-
-```
-OmniAIBench/
-├── src/                      # React frontend
-│   ├── pages/               # App pages (Dashboard, Benchmarks, etc.)
-│   ├── components/          # Reusable components
-│   └── styles/              # CSS styles
-├── src-tauri/               # Tauri Rust backend
-│   ├── OmniAIBench-Launcher.bat  # Auto-admin launcher
-│   └── tauri.conf.json
-├── OmniHardwareMonitor/     # C# sidecar
-└── backend/                 # Python monitoring scripts
-```
-
-## 🐛 Troubleshooting
-
-**No sensor data**: Ensure app runs as administrator via launcher.bat
-**C# sidecar not starting**: Verify .NET 8.0 runtime installed
-**UAC prompt missing**: Run launcher.bat, not .exe directly
-
-## 🚀 Roadmap
-
-- Real CPU stress tests (Web Workers)
-- WebGL/WebGPU actual rendering benchmarks
-- Cloud leaderboard (global rankings)
-- Theme toggle (dark/light)
-- Real-time performance graphs
-- System comparison tools
-
-## 📝 License
-
-MIT License
-
-## 👥 Contributors
-
-- [vikash236](https://github.com/vikash236)
+Based on professional benchmarking tools:
+- **Geekbench AI Pro** architecture for AI benchmarks
+- **HWiNFO64** kernel driver approach for sensors
+- **3DMark** DirectX 12/Vulkan GPU testing
 
 ---
 
-**Made with ❤️ for hardware enthusiasts**
+**Initial installer size**: ~15-20 MB  
+**After model download**: ~500 MB total

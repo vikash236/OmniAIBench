@@ -1,44 +1,74 @@
-# Dependencies
-node_modules/
-dist/
-target/
+# Build directories
+build/
+cmake-build-*/
+out/
 
-# Tauri
-/src-tauri/target/
-/src-tauri/Cargo.lock
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+*.vcxproj.filters
+*.vcxproj.user
 
-# Environment variables
-.env
-.env.local
-.env.*.local
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Qt
+*.qm
+*.autosave
+ui_*.h
+moc_*.cpp
+qrc_*.cpp
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+python_embedded/
+venv/
+.venv/
+
+# Logs
+*.log
+
+# AI Models (downloaded at runtime)
+models/
+*.onnx
+*.bin
+*.xml
+
+# Certificates (test signing)
+*.cer
+*.pfx
+*.pvk
+
+# Compiled binaries
+*.exe
+*.dll
+*.sys
+*.pdb
+*.ilk
+*.obj
+*.lib
+*.exp
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
 
-# Logs
-*.log
-npm-debug.log*
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-.venv/
-venv/
-ENV/
-
-# Model cache
-backend/cache/
-
-# Build outputs
-*.exe
-*.msi
-*.dmg
-*.deb
+# vcpkg
+vcpkg_installed/
+node_modules
