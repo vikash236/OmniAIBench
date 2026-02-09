@@ -1,179 +1,170 @@
-# OmniAIBench
+# OmniAIBench 🚀
 
-<div align="center">
+A comprehensive hardware benchmarking and monitoring application with professional VS Code-inspired UI.
 
-![OmniAIBench Logo](https://img.shields.io/badge/OmniAIBench-v1.0.0-7dcfff?style=for-the-badge)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Platform](https://img.shields.io/badge/platform-Windows-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
 
-**Comprehensive AI & Hardware Benchmarking Suite**
+## ✨ Features
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Tauri](https://img.shields.io/badge/Tauri-2.0-24C8D8?style=flat-square&logo=tauri)](https://tauri.app/)
-[![React](https://img.shields.io/badge/React-18.2-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-3178C6?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+### 📊 Real-Time Hardware Monitoring
+- **CPU Monitoring**: Core temperatures, frequencies, loads (per-thread)
+- **GPU Monitoring**: Temperature, utilization, VRAM, power draw, fan speeds
+- **RAM Monitoring**: Usage, available memory
+- **NPU Detection**: AMD Ryzen AI support
+- **Comprehensive Sensors**: Voltages, power consumption, fan speeds
 
-A next-generation benchmarking application combining **Geekbench-style CPU/GPU compute tests** + **3DMark-inspired graphics benchmarks** + **cutting-edge AI workload testing**.
+### 🏆 Benchmark Suite
+- **CPU Benchmark**: Single-core and multi-core performance tests
+- **GPU Benchmark**: Graphics + compute tests with live FPS tracking
+- **NPU Benchmark**: AI inference performance testing
+- **Score Tracking**: Local leaderboard with export to JSON
 
-[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Roadmap](#roadmap) • [Contributing](#contributing)
-
-</div>
-
----
-
-## 🚀 Features
-
-### 🔥 Core Capabilities
-
-- **CPU Benchmarking**: Single-core, multi-core, AR/ML workloads with Geekbench-style scoring
-- **GPU Compute**: OpenCL, Vulkan, DirectX 12 tests for image processing, matrix operations
-- **AI Inference**: Multi-framework support (ONNX, PyTorch, TensorFlow, OpenVINO)
-- **NPU Support**: AMD Ryzen AI (Phoenix/Hawk Point/Strix), Intel AI Boost
-- **Stress Testing**: CPU/GPU/Memory stability testing with thermal monitoring
-- **Gaming FPS Estimates**: Predict performance in popular games based on scores
-- **Global Leaderboard**: Compare your results with similar hardware worldwide
-
-### 💎 What Makes It Special
-
-| Feature | OmniAIBench | Geekbench | 3DMark | Cinebench |
-|---------|-------------|-----------|--------|-----------|
-| CPU Benchmarks | ✅ | ✅ | ❌ | ✅ |
-| GPU Compute | ✅ | ✅ | ❌ | ❌ |
-| **NPU Benchmarks** | ✅ | ❌ | ❌ | ❌ |
-| **AI Inference** | ✅ Multi-framework | ❌ | ❌ | ❌ |
-| Stress Testing | ✅ | ❌ | Partial | ❌ |
-| Real-time Monitoring | ✅ | ❌ | ✅ | ❌ |
-| **Open Source** | ✅ MIT | ❌ | ❌ | ❌ |
-
----
+### 🎨 Professional UI
+- Clean VS Code Dark+ theme
+- Flat minimal design
+- Color-coded components (Blue=CPU, Amber=GPU, Yellow=NPU, Green=RAM)
+- Responsive layout
+- Small, clean fonts (13px base)
 
 ## 📦 Installation
 
 ### Prerequisites
+- Windows 10/11 (x64)
+- .NET 8.0 Runtime (bundled with installer)
+- WebView2 Runtime (auto-installed)
 
-- **Windows 10/11** (Linux/macOS coming soon)
-- **Python 3.10+** (bundled in installer)
-- **8GB RAM** minimum (16GB+ recommended for AI benchmarks)
+### Install Steps
 
-### Quick Start
+1. **Download installer** from Releases:
+   - `OmniAIBench_1.0.0_x64_en-US.msi` (recommended)
+   - `OmniAIBench_1.0.0_x64-setup.exe` (NSIS)
 
-1. Download the latest release from [Releases](https://github.com/yourusername/OmniAIBench/releases)
-2. Run the installer (`OmniAIBench-Setup.exe`)
-3. The app will automatically detect your hardware and set up required environments
+2. **Run installer** and follow wizard
 
-### From Source
+3. **Launch with admin privileges**:
+   ```
+   Navigate to install directory
+   Run: OmniAIBench-Launcher.bat
+   Click "Yes" on UAC prompt
+   ```
+
+## 🔧 Building from Source
+
+### Requirements
+- Node.js 18+
+- Rust 1.70+
+- .NET 8.0 SDK
+- Python 3.8+ (optional, for backend monitoring)
+
+### Build Steps
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/OmniAIBench.git
+git clone https://github.com/vikash236/OmniAIBench.git
 cd OmniAIBench
-
-# Install frontend dependencies
-npm install
-
-# Install Python backend dependencies
-pip install -r backend/requirements.txt
-
-# Run development server
-npm run tauri dev
-```
-
----
-
-## 🎯 Usage
-
-### Running Benchmarks
-
-1. **Quick Benchmark** (5 minutes): Tests CPU, GPU, and AI in one go
-2. **CPU Bench**: Comprehensive single/multi-core tests
-3. **GPU Compute**: OpenCL/Vulkan tests for your graphics card
-4. **NPU Neural**: AI inference on AMD Ryzen AI or Intel NPU
-5. **Stress Test**: System stability validation with thermal monitoring
-
-### Model Selection
-
-Choose from **40+ AI models**:
-- **Computer Vision**: ResNet50, EfficientNet, ViT
-- **Object Detection**: YOLOv8 (nano to xlarge)
-- **LLMs**: Phi-3-mini, Llama-3 (FP32, FP16, INT8, INT4)
-- **Segmentation**: SAM (Segment Anything)
-- **Audio**: Whisper
-
-⚠️ The app warns you if your hardware is insufficient for high-end models.
-
----
-
-## 🗺️ Roadmap
-
-**Phase 1** (Current): Core infrastructure
-- ✅ CPU/GPU compute benchmarks
-- ✅ AI inference testing
-- ✅ NPU support (AMD, Intel)
-- ✅ Leaderboard system
-
-**Phase 2** (Next 6 months):
-- Graphics rendering benchmarks (DirectX 12, Vulkan)
-- Ray tracing tests
-- Mobile platform support (Android/iOS)
-- Power efficiency scoring
-
-**Phase 3** (1 year):
-- Cloud benchmark orchestration
-- Multi-system comparison dashboard
-- Hardware failure prediction
-- OEM pre-install testing integration
-
----
-
-## 🛠️ Technology Stack
-
-- **Frontend**: Tauri 2.0, React 18, TypeScript, Tailwind CSS, Shadcn/UI
-- **Backend**: Rust (Tauri), Python 3.10+
-- **AI Frameworks**: ONNX Runtime, PyTorch, TensorFlow, OpenVINO
-- **Databases**: Firebase (auth), Supabase (leaderboard)
-- **UI Theme**: TokyoNight with glassmorphism
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
-
-### Development Setup
-
-```bash
-# Install Rust
-winget install --id=Rustlang.Rustup -e
-
-# Install Node.js
-winget install -e --id OpenJS.NodeJS
 
 # Install dependencies
 npm install
-cargo build
 
-# Run dev server
+# Build C# sidecar
+cd OmniHardwareMonitor
+dotnet publish -c Release -r win-x64 --self-contained
+cd ..
+
+# Development mode
 npm run tauri dev
+
+# Production build
+npm run tauri build
 ```
 
+**Output**: Installers in `src-tauri/target/release/bundle/`
+
+## ⚡ Auto-Admin Elevation
+
+OmniAIBench requires administrator privileges for full hardware sensor access.
+
+**Solution**: Use included `OmniAIBench-Launcher.bat`
+
+### How it works:
+1. Launcher checks if running as admin
+2. Shows UAC prompt if needed
+3. Launches app with admin rights
+4. Full sensor access enabled!
+
+### Create Desktop Shortcut:
+1. Open install directory
+2. Right-click `OmniAIBench-Launcher.bat`
+3. Send to → Desktop (create shortcut)
+
+## 🎯 Usage
+
+### Dashboard
+- View real-time hardware stats
+- CPU/GPU/RAM overview
+- Auto-refresh every 5 seconds
+
+### Sensor Panel
+- Click "Sensors" button in header
+- Categorized sensor view (temperatures, utilization, frequencies, power, fans, memory)
+
+### Benchmarks
+- Navigate to CPU/GPU/NPU Benchmark pages
+- Click "Start Benchmark"
+- View progress and results
+- Scores automatically saved to leaderboard
+
+### Leaderboard
+- View all test results
+- Filter by test type
+- Export to JSON
+
+## 🛠️ Tech Stack
+
+**Frontend:** React 18, TypeScript, Vite, Tailwind CSS
+**Backend:** Tauri v2 (Rust), C# LibreHardwareMonitor, Python
+**Monitoring:** LibreHardwareMonitor, psutil, pynvml, Windows WMI
+
+## 📁 Project Structure
+
+```
+OmniAIBench/
+├── src/                      # React frontend
+│   ├── pages/               # App pages (Dashboard, Benchmarks, etc.)
+│   ├── components/          # Reusable components
+│   └── styles/              # CSS styles
+├── src-tauri/               # Tauri Rust backend
+│   ├── OmniAIBench-Launcher.bat  # Auto-admin launcher
+│   └── tauri.conf.json
+├── OmniHardwareMonitor/     # C# sidecar
+└── backend/                 # Python monitoring scripts
+```
+
+## 🐛 Troubleshooting
+
+**No sensor data**: Ensure app runs as administrator via launcher.bat
+**C# sidecar not starting**: Verify .NET 8.0 runtime installed
+**UAC prompt missing**: Run launcher.bat, not .exe directly
+
+## 🚀 Roadmap
+
+- Real CPU stress tests (Web Workers)
+- WebGL/WebGPU actual rendering benchmarks
+- Cloud leaderboard (global rankings)
+- Theme toggle (dark/light)
+- Real-time performance graphs
+- System comparison tools
+
+## 📝 License
+
+MIT License
+
+## 👥 Contributors
+
+- [vikash236](https://github.com/vikash236)
+
 ---
 
-## 📄 License
-
-This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- Inspired by [Geekbench](https://www.geekbench.com/) and [3DMark](https://www.3dmark.com/)
-- UI design inspired by [TokyoNight](https://github.com/enkia/tokyo-night-vscode-theme)
-- Built with [Tauri](https://tauri.app/), [React](https://reactjs.org/), and [Shadcn/UI](https://ui.shadcn.com/)
-
----
-
-<div align="center">
-
-**Made with ❤️ by the OmniAIBench team**
-
-[Report Bug](https://github.com/yourusername/OmniAIBench/issues) • [Request Feature](https://github.com/yourusername/OmniAIBench/issues) • [Join Discord](https://discord.gg/omniaibench)
-
-</div>
+**Made with ❤️ for hardware enthusiasts**
