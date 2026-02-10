@@ -23,15 +23,22 @@ add_executable(OmniAIBench WIN32
     src/core/hardware_detector.h
     src/core/sensor_monitor.cpp
     src/core/sensor_monitor.h
+    src/benchmarks/cpu_benchmark.cpp
+    src/benchmarks/cpu_benchmark.h
     src/ui/main_window.cpp
     src/ui/main_window.h
     src/ui/dashboard_widget.cpp
     src/ui/dashboard_widget.h
     src/ui/sensor_panel_widget.h
+    src/ui/sensor_panel_widget.cpp
+    src/ui/cpu_benchmark_widget.cpp
     src/ui/cpu_benchmark_widget.h
     src/ui/gpu_benchmark_widget.h
+    src/ui/gpu_benchmark_widget.cpp
     src/ui/npu_benchmark_widget.h
+    src/ui/npu_benchmark_widget.cpp
     src/ui/leaderboard_widget.h
+    src/ui/leaderboard_widget.cpp
     src/utils/logger.cpp
     src/utils/logger.h
 )

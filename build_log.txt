@@ -2,22 +2,11 @@ MSBuild version 18.0.5+e22287bf1 for .NET Framework
 
   Automatic MOC and UIC for target OmniAIBench
   Scanning sources for module dependencies...
-  sensor_monitor.cpp
-  dashboard_widget.cpp
-  main_window.cpp
+  sensor_panel_widget.cpp
+  cpu_benchmark.cpp
   Compiling...
-  dashboard_widget.cpp
-  main_window.cpp
-  sensor_monitor.cpp
-C:\Projects\OmniAIBench\src\ui\dashboard_widget.cpp(25,34): error C2248: 'SensorMonitor::InitNVML': cannot access private member declared in class 'SensorMonitor' [C:\Projects\OmniAIBench\out\build\x64-release\OmniAIBench.vcxproj]
-      C:\Projects\OmniAIBench\src\core\sensor_monitor.h(129,8):
-      see declaration of 'SensorMonitor::InitNVML'
-      C:\Projects\OmniAIBench\src\core\sensor_monitor.h(21,7):
-      see declaration of 'SensorMonitor'
-  
-C:\Projects\OmniAIBench\src\ui\dashboard_widget.cpp(522,38): error C2248: 'SensorMonitor::ReadNVIDIASensors': cannot access private member declared in class 'SensorMonitor' [C:\Projects\OmniAIBench\out\build\x64-release\OmniAIBench.vcxproj]
-      C:\Projects\OmniAIBench\src\core\sensor_monitor.h(131,14):
-      see declaration of 'SensorMonitor::ReadNVIDIASensors'
-      C:\Projects\OmniAIBench\src\core\sensor_monitor.h(21,7):
-      see declaration of 'SensorMonitor'
-  
+  sensor_panel_widget.cpp
+  cpu_benchmark.cpp
+  mocs_compilation_Release.cpp
+  OmniAIBench.vcxproj -> C:\Projects\OmniAIBench\out\build\x64-release\Release\OmniAIBench.exe
+  	Embedding admin manifest for UAC elevation...
