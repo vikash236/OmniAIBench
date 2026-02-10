@@ -55,6 +55,7 @@ target_link_libraries(OmniAIBench PRIVATE
     unofficial::sqlite3::sqlite3
     nlohmann_json::nlohmann_json
     wbemuuid  # WMI library for hardware detection
+    pdh       # Performance Data Helper for GPU engine utilization
 )
 
 # Windows-specific settings

@@ -13,7 +13,9 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
+#include <Pdh.h>
 #include <Windows.h>
+
 
 SensorPanelWidget::SensorPanelWidget(QWidget *parent) : QWidget(parent) {
   // Initialize hardware detector
@@ -506,59 +508,155 @@ void SensorPanelWidget::updateData() {
                       "Clock");
   }
 
-  // === GPU Sensors (NVML) ===
-  if (nvmlAvailable && sensorMonitor) {
-    auto gpuSensors = sensorMonitor->ReadNVIDIASensors();
-
-    if (gpuSensors.temperature > 0) {
-      addOrUpdateRecord("GPU Temperature", "GPU_0", gpuSensors.temperature,
-                        "°C", "Temperature");
-    }
-    if (gpuSensors.gpuClock > 0) {
-      addOrUpdateRecord("GPU Core Clock", "GPU_0", gpuSensors.gpuClock, "MHz",
-                        "Clock");
-    }
-    if (gpuSensors.memoryClock > 0) {
-      addOrUpdateRecord("GPU Memory Clock", "GPU_0", gpuSensors.memoryClock,
-                        "MHz", "Clock");
-    }
-    if (gpuSensors.powerW > 0) {
-      addOrUpdateRecord("GPU Power", "GPU_0", gpuSensors.powerW, "W", "Power");
-    }
-    if (gpuSensors.fanSpeedPercent > 0) {
-      addOrUpdateRecord("GPU Fan", "GPU_0", gpuSensors.fanSpeedPercent, "%",
-                        "Fan");
-    }
-    if (gpuSensors.fanSpeedRPM > 0) {
-      addOrUpdateRecord("GPU Fan Speed", "GPU_0", gpuSensors.fanSpeedRPM, "RPM",
-                        "Fan");
-    }
-    addOrUpdateRecord("GPU Usage", "GPU_0", gpuSensors.usagePercent, "%",
-                      "Load");
-
-    if (gpuSensors.memoryTotalMB > 0) {
-      addOrUpdateRecord("VRAM Used", "GPU_0", gpuSensors.memoryUsedMB, "MB",
-                        "Data");
-      addOrUpdateRecord("VRAM Total", "GPU_0", gpuSensors.memoryTotalMB, "MB",
-                        "Data");
-      float vramPercent =
-          (gpuSensors.memoryUsedMB / gpuSensors.memoryTotalMB) * 100.0f;
-      addOrUpdateRecord("VRAM Usage", "GPU_0", vramPercent, "%", "Load");
+  // === GPU Sensors ===
+  // GPU index mapping: find NVIDIA and AMD GPUs
+  int nvidiaGpuIdx = -1;
+  int amdGpuIdx = -1;
+  if (hardwareDetected) {
+    for (size_t i = 0; i < sysInfo.gpus.size(); ++i) {
+      if (sysInfo.gpus[i].vendor == "NVIDIA" ||
+          sysInfo.gpus[i].name.find("NVIDIA") != std::string::npos ||
+          sysInfo.gpus[i].name.find("GeForce") != std::string::npos) {
+        nvidiaGpuIdx = (int)i;
+      } else if (sysInfo.gpus[i].vendor == "AMD" ||
+                 sysInfo.gpus[i].name.find("AMD") != std::string::npos ||
+                 sysInfo.gpus[i].name.find("Radeon") != std::string::npos) {
+        amdGpuIdx = (int)i;
+      }
     }
   }
 
-  // === RAM Sensors ===
-  if (hardwareDetected) {
-    sysInfo.ram = hwDetector->DetectRAM();
-    float totalGB = sysInfo.ram.totalBytes / (1024.0f * 1024.0f * 1024.0f);
-    float usedGB = (sysInfo.ram.totalBytes - sysInfo.ram.availableBytes) /
-                   (1024.0f * 1024.0f * 1024.0f);
-    float usagePercent = (usedGB / totalGB) * 100.0f;
+  // NVIDIA GPU via NVML
+  if (nvmlAvailable && sensorMonitor && nvidiaGpuIdx >= 0) {
+    auto gpuSensors = sensorMonitor->ReadNVIDIASensors();
+    QString gpuCat = QString("GPU_%1").arg(nvidiaGpuIdx);
 
-    addOrUpdateRecord("Physical Memory Used", "RAM", usedGB, "GB", "Data");
-    addOrUpdateRecord("Physical Memory Total", "RAM", totalGB, "GB", "Data");
-    addOrUpdateRecord("Physical Memory Load", "RAM", usagePercent, "%", "Load");
-    if (sysInfo.ram.speedMHz > 0) {
+    if (gpuSensors.temperature > 0)
+      addOrUpdateRecord("GPU Temperature", gpuCat, gpuSensors.temperature, "°C",
+                        "Temperature");
+    if (gpuSensors.gpuClock > 0)
+      addOrUpdateRecord("GPU Core Clock", gpuCat, gpuSensors.gpuClock, "MHz",
+                        "Clock");
+    if (gpuSensors.memoryClock > 0)
+      addOrUpdateRecord("GPU Memory Clock", gpuCat, gpuSensors.memoryClock,
+                        "MHz", "Clock");
+    if (gpuSensors.powerW > 0)
+      addOrUpdateRecord("GPU Power", gpuCat, gpuSensors.powerW, "W", "Power");
+    if (gpuSensors.fanSpeedPercent > 0)
+      addOrUpdateRecord("GPU Fan", gpuCat, gpuSensors.fanSpeedPercent, "%",
+                        "Fan");
+    if (gpuSensors.fanSpeedRPM > 0)
+      addOrUpdateRecord("GPU Fan Speed", gpuCat, gpuSensors.fanSpeedRPM, "RPM",
+                        "Fan");
+    addOrUpdateRecord("GPU Usage", gpuCat, gpuSensors.usagePercent, "%",
+                      "Load");
+
+    if (gpuSensors.memoryTotalMB > 0) {
+      addOrUpdateRecord("VRAM Used", gpuCat, gpuSensors.memoryUsedMB, "MB",
+                        "Data");
+      addOrUpdateRecord("VRAM Total", gpuCat, gpuSensors.memoryTotalMB, "MB",
+                        "Data");
+      float vramPercent =
+          (gpuSensors.memoryUsedMB / gpuSensors.memoryTotalMB) * 100.0f;
+      addOrUpdateRecord("VRAM Usage", gpuCat, vramPercent, "%", "Load");
+    }
+  }
+
+  // AMD iGPU - show hardware-detected data and GPU engine utilization
+  if (amdGpuIdx >= 0 && hardwareDetected &&
+      amdGpuIdx < (int)sysInfo.gpus.size()) {
+    QString gpuCat = QString("GPU_%1").arg(amdGpuIdx);
+
+    // Show detected VRAM info from WMI
+    float detectedVramMB =
+        sysInfo.gpus[amdGpuIdx].vramBytes / (1024.0f * 1024.0f);
+    if (detectedVramMB > 0) {
+      addOrUpdateRecord("Dedicated VRAM", gpuCat, detectedVramMB, "MB", "Data");
+    }
+    float sharedMemMB =
+        sysInfo.gpus[amdGpuIdx].sharedMemBytes / (1024.0f * 1024.0f);
+    if (sharedMemMB > 0) {
+      addOrUpdateRecord("Shared GPU Memory", gpuCat, sharedMemMB, "MB", "Data");
+    }
+
+    // GPU Engine utilization via PDH (Performance Data Helper)
+    // Query "\GPU Engine(*engtype_3D)\Utilization Percentage" for 3D engine
+    static PDH_HQUERY gpuQuery = nullptr;
+    static PDH_HCOUNTER gpuCounter = nullptr;
+    static bool pdhInitialized = false;
+    static bool pdhAvailable = false;
+
+    if (!pdhInitialized) {
+      pdhInitialized = true;
+      if (PdhOpenQueryW(nullptr, 0, &gpuQuery) == ERROR_SUCCESS) {
+        // Try AMD-specific GPU engine counter
+        // The counter path uses the adapter LUID which varies, so use wildcard
+        PDH_STATUS status = PdhAddEnglishCounterW(
+            gpuQuery, L"\\GPU Engine(*)\\Utilization Percentage", 0,
+            &gpuCounter);
+        if (status == ERROR_SUCCESS) {
+          PdhCollectQueryData(gpuQuery); // First collection to prime
+          pdhAvailable = true;
+        }
+      }
+    }
+
+    if (pdhAvailable && gpuQuery) {
+      PdhCollectQueryData(gpuQuery);
+
+      PDH_FMT_COUNTERVALUE counterValue;
+      if (PdhGetFormattedCounterValue(gpuCounter, PDH_FMT_DOUBLE, nullptr,
+                                      &counterValue) == ERROR_SUCCESS) {
+        float gpuUsage = (float)counterValue.doubleValue;
+        if (gpuUsage >= 0 && gpuUsage <= 100) {
+          addOrUpdateRecord("GPU Utilization", gpuCat, gpuUsage, "%", "Load");
+        }
+      }
+    }
+  }
+
+  // === RAM Sensors (via GlobalMemoryStatusEx - reliable) ===
+  {
+    MEMORYSTATUSEX memStatus;
+    memStatus.dwLength = sizeof(memStatus);
+    if (GlobalMemoryStatusEx(&memStatus)) {
+      float totalGB =
+          (float)memStatus.ullTotalPhys / (1024.0f * 1024.0f * 1024.0f);
+      float usedGB = (float)(memStatus.ullTotalPhys - memStatus.ullAvailPhys) /
+                     (1024.0f * 1024.0f * 1024.0f);
+      float usagePercent = (float)memStatus.dwMemoryLoad;
+
+      addOrUpdateRecord("Physical Memory Used", "RAM", usedGB, "GB", "Data");
+      addOrUpdateRecord("Physical Memory Total", "RAM", totalGB, "GB", "Data");
+      addOrUpdateRecord("Physical Memory Load", "RAM", usagePercent, "%",
+                        "Load");
+      addOrUpdateRecord("Available Memory", "RAM",
+                        (float)memStatus.ullAvailPhys /
+                            (1024.0f * 1024.0f * 1024.0f),
+                        "GB", "Data");
+
+      // Virtual memory
+      float totalVirtGB =
+          (float)memStatus.ullTotalVirtual / (1024.0f * 1024.0f * 1024.0f);
+      float usedVirtGB =
+          (float)(memStatus.ullTotalVirtual - memStatus.ullAvailVirtual) /
+          (1024.0f * 1024.0f * 1024.0f);
+      addOrUpdateRecord("Virtual Memory Used", "RAM", usedVirtGB, "GB", "Data");
+      addOrUpdateRecord("Virtual Memory Total", "RAM", totalVirtGB, "GB",
+                        "Data");
+
+      // Page file
+      float totalPageGB =
+          (float)memStatus.ullTotalPageFile / (1024.0f * 1024.0f * 1024.0f);
+      float usedPageGB =
+          (float)(memStatus.ullTotalPageFile - memStatus.ullAvailPageFile) /
+          (1024.0f * 1024.0f * 1024.0f);
+      addOrUpdateRecord("Page File Used", "RAM", usedPageGB, "GB", "Data");
+      addOrUpdateRecord("Page File Total", "RAM", totalPageGB, "GB", "Data");
+    }
+
+    // RAM speed from hardware detector
+    if (hardwareDetected && sysInfo.ram.speedMHz > 0) {
       addOrUpdateRecord("Memory Clock", "RAM", (float)sysInfo.ram.speedMHz,
                         "MHz", "Clock");
     }
