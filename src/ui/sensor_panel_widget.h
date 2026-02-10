@@ -1,6 +1,6 @@
 /*
  * Sensor Panel Widget - HWiNFO64-style sensor monitoring
- * Tab 1: System Summary dashboard (hardware overview)
+ * Tab 1: System Summary dashboard (vendor logos, mini charts, hw overview)
  * Tab 2: Sensor Status (left tree | right data table with Current/Min/Max/Avg)
  * License: MIT
  */
@@ -23,6 +23,10 @@
 #include <QWidget>
 #include <memory>
 
+// Forward declarations for Qt Charts (included in .cpp only)
+class QChartView;
+class QLineSeries;
+
 class SensorPanelWidget : public QWidget {
   Q_OBJECT
 
@@ -40,12 +44,16 @@ private:
   QGroupBox *createInfoGroup(const QString &title, const QColor &borderColor);
   QLabel *createKeyLabel(const QString &text);
   QLabel *createValueLabel(const QString &text);
+  QLabel *createVendorLogo(const QString &vendor);
+
+  // Mini chart helpers
+  QChartView *createMiniChart(const QString &title, const QColor &lineColor);
+  void updateMiniChart(QChartView *chart, QLineSeries *series, float value);
 
   // Sensor Status tab
   void setupSensorTab(QWidget *tab);
   void populateHardwareTree();
   void populateSensorTable(const QString &category);
-  void updateSensorValues();
 
   // Color helpers
   static QString tempColor(float temp);
@@ -65,6 +73,7 @@ private:
   QLabel *cpuTempLabel = nullptr;
   QLabel *cpuUsageLabel = nullptr;
   QLabel *cpuPowerLabel = nullptr;
+  QLabel *cpuVoltageLabel = nullptr;
   QLabel *memTotalLabel = nullptr;
   QLabel *memUsedLabel = nullptr;
   QLabel *memAvailLabel = nullptr;
@@ -72,7 +81,19 @@ private:
   QLabel *memTypeLabel = nullptr;
   QLabel *memSpeedLabel = nullptr;
   QLabel *osLabel = nullptr;
-  // GPU labels stored per GPU
+
+  // Mini charts
+  QChartView *cpuTempChart = nullptr;
+  QLineSeries *cpuTempSeries = nullptr;
+  QChartView *cpuUsageChart = nullptr;
+  QLineSeries *cpuUsageSeries = nullptr;
+  QChartView *gpuTempChart = nullptr;
+  QLineSeries *gpuTempSeries = nullptr;
+  QChartView *gpuUsageChart = nullptr;
+  QLineSeries *gpuUsageSeries = nullptr;
+  int chartSampleCount = 0;
+
+  // GPU labels
   struct GPUSummaryLabels {
     QLabel *name = nullptr;
     QLabel *vram = nullptr;
@@ -82,8 +103,12 @@ private:
     QLabel *usage = nullptr;
     QLabel *power = nullptr;
     QLabel *clock = nullptr;
+    QLabel *memClock = nullptr;
+    QLabel *fanSpeed = nullptr;
+    QLabel *vramUsed = nullptr;
   };
   QVector<GPUSummaryLabels> gpuLabels;
+
   // Storage labels
   struct StorageSummaryLabels {
     QLabel *name = nullptr;
