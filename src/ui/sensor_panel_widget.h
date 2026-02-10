@@ -1,6 +1,7 @@
 /*
  * Sensor Panel Widget - HWiNFO64-style sensor monitoring
- * Left: Hardware tree  |  Right: Sensor data table
+ * Tab 1: System Summary dashboard (hardware overview)
+ * Tab 2: Sensor Status (left tree | right data table with Current/Min/Max/Avg)
  * License: MIT
  */
 
@@ -8,9 +9,13 @@
 
 #include "core/hardware_detector.h"
 #include "core/sensor_monitor.h"
+#include <QGridLayout>
+#include <QGroupBox>
 #include <QHeaderView>
 #include <QLabel>
+#include <QScrollArea>
 #include <QSplitter>
+#include <QTabWidget>
 #include <QTableWidget>
 #include <QTimer>
 #include <QTreeWidget>
@@ -28,6 +33,16 @@ public:
 private:
   void setupUI();
   void applyStyles();
+
+  // System Summary tab
+  void setupSummaryTab(QWidget *tab);
+  void updateSummaryTab();
+  QGroupBox *createInfoGroup(const QString &title, const QColor &borderColor);
+  QLabel *createKeyLabel(const QString &text);
+  QLabel *createValueLabel(const QString &text);
+
+  // Sensor Status tab
+  void setupSensorTab(QWidget *tab);
   void populateHardwareTree();
   void populateSensorTable(const QString &category);
   void updateSensorValues();
@@ -36,13 +51,53 @@ private:
   static QString tempColor(float temp);
   static QString loadColor(float load);
 
-  // UI
+  // UI - Main
+  QTabWidget *tabWidget = nullptr;
+  QTimer *updateTimer = nullptr;
+
+  // UI - Summary tab
+  QWidget *summaryTab = nullptr;
+  QLabel *cpuNameLabel = nullptr;
+  QLabel *cpuCoresLabel = nullptr;
+  QLabel *cpuClockLabel = nullptr;
+  QLabel *cpuCacheLabel = nullptr;
+  QLabel *cpuFeaturesLabel = nullptr;
+  QLabel *cpuTempLabel = nullptr;
+  QLabel *cpuUsageLabel = nullptr;
+  QLabel *cpuPowerLabel = nullptr;
+  QLabel *memTotalLabel = nullptr;
+  QLabel *memUsedLabel = nullptr;
+  QLabel *memAvailLabel = nullptr;
+  QLabel *memUsageLabel = nullptr;
+  QLabel *memTypeLabel = nullptr;
+  QLabel *memSpeedLabel = nullptr;
+  QLabel *osLabel = nullptr;
+  // GPU labels stored per GPU
+  struct GPUSummaryLabels {
+    QLabel *name = nullptr;
+    QLabel *vram = nullptr;
+    QLabel *shared = nullptr;
+    QLabel *driver = nullptr;
+    QLabel *temp = nullptr;
+    QLabel *usage = nullptr;
+    QLabel *power = nullptr;
+    QLabel *clock = nullptr;
+  };
+  QVector<GPUSummaryLabels> gpuLabels;
+  // Storage labels
+  struct StorageSummaryLabels {
+    QLabel *name = nullptr;
+    QLabel *type = nullptr;
+    QLabel *size = nullptr;
+  };
+  QVector<StorageSummaryLabels> storageLabels;
+
+  // UI - Sensor tab
   QSplitter *splitter = nullptr;
   QTreeWidget *hardwareTree = nullptr;
   QTableWidget *sensorTable = nullptr;
   QLabel *titleLabel = nullptr;
   QLabel *statusLabel = nullptr;
-  QTimer *updateTimer = nullptr;
 
   // Data
   std::unique_ptr<HardwareDetector> hwDetector;
